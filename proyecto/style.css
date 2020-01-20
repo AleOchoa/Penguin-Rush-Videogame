@@ -1,0 +1,9 @@
+body{
+    display: flex;
+    justify-content: center;
+}
+
+canvas{
+    border: 2px solid blue;
+    background-color: #B9F9F9;
+}
