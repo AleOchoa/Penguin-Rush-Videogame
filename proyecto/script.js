@@ -4,7 +4,10 @@ let lab
 let pez
 let canvas=document.querySelector("canvas")
 let ctx=canvas.getContext("2d")
+let win=new Image()
+ win.src="./Imagenes/winner.svg"
 ctx.translate(300,300)
+ctx.save()
 let interval
 let frames
 let movimientos=[[],["r"],["u"],["l"],["d"],["l","r"],["u","d"],["r","d"],["r","u"],["l","u"],["l","d"],["l","r","u"],["l","u","d"],["r","u","d"],["l","r","d"]]
@@ -22,8 +25,8 @@ class Laberinto{
         this.tablero=[[7,8,7,2,7,13,8],[5,10,9,7,9,3,3],[14,6,8,10,8,1,1],[3,7,11,7,9,10,11],[7,9,10,9,7,6,11],[14,8,7,8,5,1,5],[3,10,9,10,12,9,3]]
     }
     rotate(){
-        let rota=this.angulo+(Math.floor((Math.random()*3)+1)*90)
-        this.angulo=rota
+        let rota=(Math.floor((Math.random()*3)+1)*90)
+        this.angulo=(this.angulo+rota)%360
         ctx.rotate(rota*Math.PI/180)
     }
     draw() {
@@ -206,20 +209,68 @@ class Premio{
     }
 
 }
+function winner(){
+    let w1=p1.labx===pez.labx && p1.laby===pez.laby
+    let w2=p2.labx===pez.labx && p2.laby===pez.laby
+    if (w1===true) {
+        if (w2===true) {
+            return "tie"
+        }
+        else {
+            return "player1"
+        }
+    }
+    else {
+        if (w2===true) {
+            return "player2"
+        }
+        else {
+            return "no winner"
+        }
 
+    }
+}
 
 function update(){
 frames++
 lab.draw()
+pez.draw()
 p1.draw()
 p2.draw()
-pez.draw()
-
 if (frames%100===0) {
     lab.rotate()
 } 
+switch (winner()) {
+    case 'no winner':
+        break;
+    case 'player1':
+        clearInterval(interval) 
+        modifAngulo()      
+        ctx.clearRect(-300,-300,600,600)
+        ctx.drawImage(win,-100,-100,200,200)
+        break;
+    case 'player2':
+        break;
+    }
+}
+function modifAngulo(){
+    switch (lab.angulo) {
+        case 0:
+            ctx.rotate(0*Math.PI/180)
+            break;
+        case 90:
+            ctx.rotate(270*Math.PI/180)
+            break;
+        case 180:
+            ctx.rotate(180*Math.PI/180)
+            break;
+        case 270:
+            ctx.rotate(90*Math.PI/180)
+            break;
+    }
 }
 function start(){
+    ctx.restore()
     frames=0
     lab=new Laberinto()
     p1=new Player(lab.inicio.x,lab.inicio.y,-175+(lab.inicio.x*50),-175+(lab.inicio.y*50),0)
@@ -293,4 +344,4 @@ function start(){
     document.getElementById("start-button").onclick = function() {
       start();
     }
-}
+  } 
