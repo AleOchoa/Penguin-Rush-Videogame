@@ -6,11 +6,7 @@ let ctx=canvas.getContext("2d")
 ctx.translate(300,300)
 let interval
 let frames
-let intervalP1
-let framesP1
-let intervalP2
-let framesP2
-let movimientos=[[],["r"],["u"],["l"],["d"],["l","r"],["u","d"],["r","d"],["l","u"],["l","d"],["l","r","u"],["l","u","d"],["r","u","d"],["l","r","d"]]
+let movimientos=[[],["r"],["u"],["l"],["d"],["l","r"],["u","d"],["r","d"],["r","u"],["l","u"],["l","d"],["l","r","u"],["l","u","d"],["r","u","d"],["l","r","d"]]
 class Laberinto{
     constructor(){
         this.premio={
@@ -22,10 +18,11 @@ class Laberinto{
             y:6
         }
         this.angulo=0
-        this.tablero=[[7,8,7,2,7,13,8],[5,10,9,7,9,3,3],[14,6,8,10,8,1,1],[3,7,11,7,9,10,11],[7,9,10,9,7,6,11],[11,8,7,8,5,1,5],[3,10,9,10,12,9,3]]
+        this.tablero=[[7,8,7,2,7,13,8],[5,10,9,7,9,3,3],[14,6,8,10,8,1,1],[3,7,11,7,9,10,11],[7,9,10,9,7,6,11],[14,8,7,8,5,1,5],[3,10,9,10,12,9,3]]
     }
     rotate(){
-        let rota=this.angulo+(Math.floor(Math.random()*4)*90)
+        let rota=this.angulo+(Math.floor((Math.random()*3)+1)*90)
+        this.angulo=rota
         ctx.rotate(rota*Math.PI/180)
     }
     draw() {
@@ -114,7 +111,7 @@ class Player{
         }
         this.tipo=tipo
         this.direccion='d'
-        this.moviendo=false
+       // this.moviendo=false
 
     }
     draw(){
@@ -137,7 +134,7 @@ class Player{
         }
         ctx.drawImage(this.img,(150*this.tipo)+100,tipo2*50,50,50,this.x,this.y,40,40)
     }
-    moveDown(){
+     /*moveDown(){
             this.y++
             framesP1++
             if (framesP1==50){
@@ -164,16 +161,31 @@ class Player{
                 this.moviendo=false
             }
     }
-    moveLeft(x,labx){
-            this.x=x-1
-            framesP1+=1
-            if (framesP1==50){
+    moveLeft(){
+            this.x--
+            if ((this.x-25)%50===0){
                 console.log("left")
                 clearInterval(intervalP1)
-                this.labx=labx+1
+                this.labx=labx-1
                 this.moviendo=false
             }
         
+    }*/
+    moveLeft(){
+        this.x-=50
+        this.labx--
+    }
+    moveRight(){
+        this.x+=50
+        this.labx++
+    }
+    moveUp(){
+        this.y-=50
+        this.laby--
+    }
+    moveDown(){
+        this.y+=50
+        this.laby++
     }
 }
 
@@ -183,6 +195,10 @@ frames++
 lab.draw()
 p1.draw()
 p2.draw()
+
+if (frames%100===0) {
+    lab.rotate()
+} 
 }
 function start(){
     frames=0
@@ -201,22 +217,55 @@ function start(){
         case 37:
             if (p1.labx>0 && movimientos[lab.tablero[p1.labx][p1.laby]].includes('l') && !p1.moviendo){
             p1.direccion='l'
-            framesP1=1
-            p1.moviendo=true
-            intervalP1=setInterval(p1.moveLeft(p1.x,p1.labx),1000/50)
-
+            //framesP1=1
+            //p1.moviendo=true
+            //intervalP1=setInterval(p1.moveLeft,1000/50)
+            p1.moveLeft()
             }
             break;
         case 38:
-               if (p1.ly>0 && lab.tablero[p1.lx][p1.ly].includes('u') && !p1.moviendo){
-               framesP1=1
-               p1.moviendo=true
-               intervalP1=setInterval(p1.move,1000/50)
-               }
+               if (p1.laby>0 && movimientos[lab.tablero[p1.labx][p1.laby]].includes('u') && !p1.moviendo){
+               p1.direccion="u"
+               p1.moveUp()
+            }
                break;
-        default:
+        case 39:
+                if (p1.labx<6 && movimientos[lab.tablero[p1.labx][p1.laby]].includes('r') && !p1.moviendo){
+                p1.direccion="r"
+                p1.moveRight()
+             }
+             break;
+        case 40:
+                if (p1.laby<6 && movimientos[lab.tablero[p1.labx][p1.laby]].includes('d') && !p1.moviendo){
+                p1.direccion="d"
+                p1.moveDown()
+             }
+                break;
+        case 65:
+            if (p2.labx>0 && movimientos[lab.tablero[p2.labx][p2.laby]].includes('l') && !p2.moviendo){
+            p2.direccion='l'
+            p2.moveLeft()
+            }
             break;
-    }
+        case 87:
+               if (p2.laby>0 && movimientos[lab.tablero[p2.labx][p2.laby]].includes('u') && !p2.moviendo){
+               p2.direccion="u"
+               p2.moveUp()
+            }
+               break;
+        case 68:
+                if (p2.labx<6 && movimientos[lab.tablero[p2.labx][p2.laby]].includes('r') && !p2.moviendo){
+                p2.direccion="r"
+                p2.moveRight()
+             }
+             break;
+        case 83:
+                if (p2.laby<6 && movimientos[lab.tablero[p2.labx][p2.laby]].includes('d') && !p2.moviendo){
+                p2.direccion="d"
+                p2.moveDown()
+             }
+                break;
+            }
   })
 
   window.onload = function() {
