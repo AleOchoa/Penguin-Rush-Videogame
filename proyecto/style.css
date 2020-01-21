@@ -1,9 +1,11 @@
 body{
     display: flex;
     justify-content: center;
+    background-image: url(./Imagenes/nature-scene-with-igloo-ground_1308-29732.jpg);
+    background-size: contain;
 }
 
 canvas{
-    border: 2px solid blue;
-    background-color: #B9F9F9;
+
+    background-color: #68d8d6;
 }
