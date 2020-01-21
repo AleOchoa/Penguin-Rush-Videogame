@@ -1,6 +1,7 @@
 let p1
 let p2
 let lab
+let pez
 let canvas=document.querySelector("canvas")
 let ctx=canvas.getContext("2d")
 ctx.translate(300,300)
@@ -188,6 +189,23 @@ class Player{
         this.laby++
     }
 }
+class Premio{
+    constructor(x0,y0){
+        this.labx=x0
+        this.laby=y0
+        this.width=40
+        this.heigth=40
+        this.img=new Image()
+        this.img.src="./Imagenes/PEZ.svg"
+        this.img.onload=()=>{
+            this.draw()
+        }
+    }
+    draw(){
+        ctx.drawImage(this.img,-175+(this.labx*50),-175+(this.laby*50),this.width,this.heigth)
+    }
+
+}
 
 
 function update(){
@@ -195,6 +213,7 @@ frames++
 lab.draw()
 p1.draw()
 p2.draw()
+pez.draw()
 
 if (frames%100===0) {
     lab.rotate()
@@ -205,9 +224,11 @@ function start(){
     lab=new Laberinto()
     p1=new Player(lab.inicio.x,lab.inicio.y,-175+(lab.inicio.x*50),-175+(lab.inicio.y*50),0)
     p2=new Player(lab.inicio.x,lab.inicio.y,-175+(lab.inicio.x*50),-175+(lab.inicio.y*50),1)
+    pez=new Premio(lab.premio.x,lab.premio.y)
     lab.draw()
     p1.draw()
     p2.draw()
+    pez.draw()
     interval=setInterval(update,1000/50)
 }
 
